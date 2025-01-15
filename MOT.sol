@@ -826,6 +826,9 @@ contract MOT is Ownable, ERC20 {
     mapping(address => bool) public blacklists;
     IUniswapV2Router02 public uniswapV2Router; // uniswap router
     address public uniswapV2Pair; // uniswap pair
+    
+    event blackListUpdated(address _blockAddress, bool _isBlackList);
+    event burned(uint256 _amount);
 
     constructor(address _routerAddress) ERC20("Master Of Trivia Token", "MOT") {
         uint256 _totalSupply = 5 * 10 ** 8 * 10 ** decimals();
@@ -840,6 +843,7 @@ contract MOT is Ownable, ERC20 {
 
     function blacklist(address _address, bool _isBlacklisting) external onlyOwner {
         blacklists[_address] = _isBlacklisting;
+        emit blackListUpdated(_address, _isBlacklisting);
     }
 
     function _beforeTokenTransfer(
@@ -853,5 +857,6 @@ contract MOT is Ownable, ERC20 {
 
     function burn(uint256 value) external {
         _burn(msg.sender, value);
+        emit burned(value);
     }
 }
